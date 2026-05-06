@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 const Item = ({ story }) => {
   return (
     <div>
@@ -15,7 +16,6 @@ const Item = ({ story }) => {
   );
 };
 
-
 const List = ({ stories }) => {
   return (
     <div>
@@ -26,53 +26,64 @@ const List = ({ stories }) => {
   );
 };
 
-
-
-const Search = ({ onSearch }) => {
-  
+const Search = ({ onSearch, searchTerm }) => {
   return (
     <div>
       <label htmlFor="search">Search: </label>
-      <input id="search" type="text" onChange={onSearch} />
+      <input
+        id="search"
+        type="text"
+        value={searchTerm}
+        onChange={onSearch}
+      />
     </div>
   );
 };
-
-
 
 const App = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(
+  localStorage.getItem("search") || ""
+);
+  useEffect(() => {
+  localStorage.setItem("search", searchTerm);
+}, [searchTerm]);
+
   const handleSearch = (event) => {
-  setSearchTerm(event.target.value);
-};
+    setSearchTerm(event.target.value);
+  };
+
   const stories = [
-  {
-    objectID: "1",
-    title: "React makes UI easy",
-    url: "https://react.dev",
-    author: "Dan Abramov",
-    points: 100,
-    num_comments: 20
-  },
-  {
-    objectID: "2",
-    title: "JavaScript is everywhere",
-    url: "https://developer.mozilla.org",
-    author: "MDN Team",
-    points: 85,
-    num_comments: 10
-  }
-];
+    {
+      objectID: "1",
+      title: "React makes UI easy",
+      url: "https://react.dev",
+      author: "Dan Abramov",
+      points: 100,
+      num_comments: 20
+    },
+    {
+      objectID: "2",
+      title: "JavaScript is everywhere",
+      url: "https://developer.mozilla.org",
+      author: "MDN Team",
+      points: 85,
+      num_comments: 10
+    }
+  ];
+
   return (
     <div>
-      <h1>Week 5 Lab</h1>
-      <Search onSearch={handleSearch} />
+      <h1>Week 7 Lab</h1>
+
+      <Search onSearch={handleSearch} searchTerm={searchTerm} />
+
       <List
-  stories={stories.filter((story) =>
-    story.title.toLowerCase().includes(searchTerm.toLowerCase())
-  )}
-/>
+        stories={stories.filter((story) =>
+          story.title.toLowerCase().includes(searchTerm.toLowerCase())
+        )}
+      />
     </div>
   );
 };
+
 export default App;
