@@ -1,4 +1,51 @@
-const stories = [
+import { useState } from "react";
+const Item = ({ story }) => {
+  return (
+    <div>
+      <h3>
+        <a href={story.url} target="_blank" rel="noreferrer">
+          {story.title}
+        </a>
+      </h3>
+
+      <p>Author: {story.author}</p>
+      <p>Points: {story.points}</p>
+      <p>Comments: {story.num_comments}</p>
+    </div>
+  );
+};
+
+
+const List = ({ stories }) => {
+  return (
+    <div>
+      {stories.map((story) => (
+        <Item key={story.objectID} story={story} />
+      ))}
+    </div>
+  );
+};
+
+
+
+const Search = ({ onSearch }) => {
+  
+  return (
+    <div>
+      <label htmlFor="search">Search: </label>
+      <input id="search" type="text" onChange={onSearch} />
+    </div>
+  );
+};
+
+
+
+const App = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleSearch = (event) => {
+  setSearchTerm(event.target.value);
+};
+  const stories = [
   {
     objectID: "1",
     title: "React makes UI easy",
@@ -16,45 +63,15 @@ const stories = [
     num_comments: 10
   }
 ];
-const List = () => {
-  return (
-    <div>
-      {stories.map((story) => (
-        <div key={story.objectID}>
-          <h3>
-            <a href={story.url} target="_blank" rel="noreferrer">
-              {story.title}
-            </a>
-          </h3>
-
-          <p>Author: {story.author}</p>
-          <p>Points: {story.points}</p>
-          <p>Comments: {story.num_comments}</p>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-const Search = () => {
-  const handleChange = (event) => {
-  console.log("User is typing...");
-  console.log(event.target.value);
-};
-  return (
-    <div>
-      <label htmlFor="search">Search: </label>
-      <input id="search" type="text" onChange={handleChange} />
-    </div>
-  );
-};
-
-const App = () => {
   return (
     <div>
       <h1>Week 5 Lab</h1>
-      <Search />
-      <List />
+      <Search onSearch={handleSearch} />
+      <List
+  stories={stories.filter((story) =>
+    story.title.toLowerCase().includes(searchTerm.toLowerCase())
+  )}
+/>
     </div>
   );
 };
