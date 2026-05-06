@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
 const Item = ({ story, onRemoveStory }) => {
   return (
@@ -51,28 +52,11 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState(
   localStorage.getItem("search") || ""
 );
-const initialStories = [
-    {
-      objectID: "1",
-      title: "React makes UI easy",
-      url: "https://react.dev",
-      author: "Dan Abramov",
-      points: 100,
-      num_comments: 20
-    },
-    {
-      objectID: "2",
-      title: "JavaScript is everywhere",
-      url: "https://developer.mozilla.org",
-      author: "MDN Team",
-      points: 85,
-      num_comments: 10
-    }
-  ];
-const [stories, setStories] = useState(initialStories);
-  useEffect(() => {
-  localStorage.setItem("search", searchTerm);
-}, [searchTerm]);
+  const [url, setUrl] = useState(`${API_ENDPOINT}react`);
+
+  const [stories, setStories] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -83,12 +67,31 @@ const [stories, setStories] = useState(initialStories);
   );
   setStories(newStories);
 };
+const handleSearchSubmit = () => {
+  setUrl(`${API_ENDPOINT}${searchTerm}`);
+};
+  useEffect(() => {
+  const fetchData = async () => {
+    setIsLoading(true);
+    setIsError(false);
 
-  
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      setStories(data.hits);
+    } catch (error) {
+      setIsError(true);
+    }
+
+    setIsLoading(false);
+  };
+
+  fetchData();
+}, [url]);
  
   return (
     <div>
-      <h1>Week 7 Lab</h1>
+      <h1>Week 9 Labs </h1>
 
       <InputWithLabel
   id="search"
@@ -97,13 +100,20 @@ const [stories, setStories] = useState(initialStories);
 >
   <strong>Search:</strong>
 </InputWithLabel>
+<button
+  onClick={handleSearchSubmit}
+  disabled={!searchTerm}
+>
+  Search
+</button>
 
-     <List
-  stories={stories.filter((story) =>
-    story.title.toLowerCase().includes(searchTerm.toLowerCase())
-  )}
-  onRemoveStory={handleRemoveStory}
-/>
+    {isError && <p>Something went wrong...</p>}
+
+{isLoading ? (
+  <p>Loading...</p>
+) : (
+  <List stories={stories} onRemoveStory={handleRemoveStory} />
+)}
     </div>
   );
 };
