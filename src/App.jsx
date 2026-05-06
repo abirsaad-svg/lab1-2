@@ -1,44 +1,42 @@
-const courseTitle = "Web Development";
+const stories = [
+  {
+    objectID: "1",
+    title: "React makes UI easy",
+    url: "https://react.dev",
+    author: "Dan Abramov",
+    points: 100,
+    num_comments: 20
+  },
+  {
+    objectID: "2",
+    title: "JavaScript is everywhere",
+    url: "https://developer.mozilla.org",
+    author: "MDN Team",
+    points: 85,
+    num_comments: 10
+  }
+];
 
 function App() {
-  const studentName = "Abir Saad";
-  
-  const student = {
-    name: "Abir",
-    age: 21,
-    track: "Web Development"
-  };
+  return (
+   <div>
+  <h1>Week 3 Lab</h1>
 
-function sayHello() {
-  return `Hello ${studentName}`;
-}
-
-return (
-    <div>
-      <h1>My first React component</h1>
-
-      <p>Student name: {studentName}</p>
-
-      <p>Course: {courseTitle}</p>
-
-      <p>Welcome to {courseTitle}, {studentName}!</p>
-
-      <label htmlFor="studentInput">Enter your name:</label>
-
-      <input type="text" id="studentInput" />
+  {stories.map((story) => (
+    <div key={story.objectID}>
+      <h3>
+       <a href={story.url} target="_blank" rel="noreferrer">
+        {story.title}
+       </a>
+      </h3>
       
-      <p>Name: {student.name}</p>
-      <p>Age: {student.age}</p>
-      <p>Track: {student.track}</p>
-      <p>{sayHello()}</p>
+      <p>Author: {story.author}</p>
+      <p>Points: {story.points}</p>
+      <p>Comments: {story.num_comments}</p>
     </div>
-    
+  ))}
+</div>
   );
 }
+
 export default App;
-
-// One thing I understand well in this lab: I understand how React components return JSX and how variables are displayed using {}.
-
-// One thing that is still confusing: I still find it a bit confusing when to use variables inside or outside the component.
-
-// One mistake I made and fixed: I tried to display a whole object directly instead of accessing its properties.
