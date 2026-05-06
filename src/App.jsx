@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const Item = ({ story }) => {
+const Item = ({ story, onRemoveStory }) => {
   return (
     <div>
       <h3>
@@ -12,47 +12,46 @@ const Item = ({ story }) => {
       <p>Author: {story.author}</p>
       <p>Points: {story.points}</p>
       <p>Comments: {story.num_comments}</p>
+      <button onClick={() => onRemoveStory(story)}>
+  Delete
+</button>
     </div>
   );
 };
 
-const List = ({ stories }) => {
+const List = ({ stories, onRemoveStory }) => {
   return (
     <div>
       {stories.map((story) => (
-        <Item key={story.objectID} story={story} />
+        <Item
+  key={story.objectID}
+  story={story}
+  onRemoveStory={onRemoveStory}
+/>
       ))}
     </div>
   );
 };
 
-const Search = ({ onSearch, searchTerm }) => {
+const InputWithLabel = ({ value, onInputChange, children, id }) => {
   return (
-    <div>
-      <label htmlFor="search">Search: </label>
-      <input
-        id="search"
-        type="text"
-        value={searchTerm}
-        onChange={onSearch}
-      />
-    </div>
-  );
+  <div>
+    <label htmlFor={id}>{children}</label>
+    <input
+      id={id}
+      type="text"
+      value={value}
+      onChange={onInputChange}
+    />
+  </div>
+);
 };
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState(
   localStorage.getItem("search") || ""
 );
-  useEffect(() => {
-  localStorage.setItem("search", searchTerm);
-}, [searchTerm]);
-
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
-  };
-
-  const stories = [
+const initialStories = [
     {
       objectID: "1",
       title: "React makes UI easy",
@@ -70,18 +69,41 @@ const App = () => {
       num_comments: 10
     }
   ];
+const [stories, setStories] = useState(initialStories);
+  useEffect(() => {
+  localStorage.setItem("search", searchTerm);
+}, [searchTerm]);
 
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  const handleRemoveStory = (item) => {
+  const newStories = stories.filter(
+    (story) => story.objectID !== item.objectID
+  );
+  setStories(newStories);
+};
+
+  
+ 
   return (
     <div>
       <h1>Week 7 Lab</h1>
 
-      <Search onSearch={handleSearch} searchTerm={searchTerm} />
+      <InputWithLabel
+  id="search"
+  value={searchTerm}
+  onInputChange={handleSearch}
+>
+  <strong>Search:</strong>
+</InputWithLabel>
 
-      <List
-        stories={stories.filter((story) =>
-          story.title.toLowerCase().includes(searchTerm.toLowerCase())
-        )}
-      />
+     <List
+  stories={stories.filter((story) =>
+    story.title.toLowerCase().includes(searchTerm.toLowerCase())
+  )}
+  onRemoveStory={handleRemoveStory}
+/>
     </div>
   );
 };
