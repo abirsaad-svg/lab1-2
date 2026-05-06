@@ -16,27 +16,42 @@ const stories = [
     num_comments: 10
   }
 ];
-
-function App() {
+function List() {
   return (
-   <div>
-  <h1>Week 3 Lab</h1>
+    <div>
+      {stories.map((story) => (
+        <div key={story.objectID}>
+          <h3>
+            <a href={story.url} target="_blank" rel="noreferrer">
+              {story.title}
+            </a>
+          </h3>
 
-  {stories.map((story) => (
-    <div key={story.objectID}>
-      <h3>
-       <a href={story.url} target="_blank" rel="noreferrer">
-        {story.title}
-       </a>
-      </h3>
-      
-      <p>Author: {story.author}</p>
-      <p>Points: {story.points}</p>
-      <p>Comments: {story.num_comments}</p>
+          <p>Author: {story.author}</p>
+          <p>Points: {story.points}</p>
+          <p>Comments: {story.num_comments}</p>
+        </div>
+      ))}
     </div>
-  ))}
-</div>
+  );
+}
+function Search() {
+  return (
+    <div>
+      <label htmlFor="search">Search: </label>
+      <input id="search" type="text" />
+    </div>
   );
 }
 
+function App() {
+  return (
+    <div>
+      <h1>Week 3 Lab</h1>
+
+      <Search />
+      <List />
+    </div>
+  );
+}
 export default App;
