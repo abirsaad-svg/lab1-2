@@ -16,7 +16,7 @@ const stories = [
     num_comments: 10
   }
 ];
-function List() {
+const List = () => {
   return (
     <div>
       {stories.map((story) => (
@@ -34,24 +34,28 @@ function List() {
       ))}
     </div>
   );
-}
-function Search() {
+};
+
+const Search = () => {
+  const handleChange = (event) => {
+  console.log("User is typing...");
+  console.log(event.target.value);
+};
   return (
     <div>
       <label htmlFor="search">Search: </label>
-      <input id="search" type="text" />
+      <input id="search" type="text" onChange={handleChange} />
     </div>
   );
-}
+};
 
-function App() {
+const App = () => {
   return (
     <div>
-      <h1>Week 3 Lab</h1>
-
+      <h1>Week 5 Lab</h1>
       <Search />
       <List />
     </div>
   );
-}
+};
 export default App;
